@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using Common.Service;
 using Extensions;
@@ -17,17 +18,15 @@ namespace Common.Locale
 {
 	public static class LocaleConst
 	{
-		
 		// Путь к локалям в StreamingAssets.
 		public static readonly string LocalesPath = "Locales";
+
 		// Имя файла манифеста для локалей.
 		public static readonly string LocalesManifestFileName = "manifest";
-
 	}
-	
+
 	public class LocaleService : IGameService
 	{
-		
 		private class LocaleEntry
 		{
 			private readonly Dictionary<string, string> _map = new Dictionary<string, string>();
@@ -250,18 +249,10 @@ namespace Common.Locale
 				}
 				else
 				{
-					var lines = new List<string>();
-					using (var reader = new StringReader(www.downloadHandler.text))
-					{
-						string line;
-						while ((line = reader.ReadLine()) != null)
-						{
-							lines.Add(line.Trim());
-						}
-					}
-
+					var lines = Encoding.UTF8.GetString(www.downloadHandler.data).Split(new string[] {"\r\n", "\n"},
+						StringSplitOptions.RemoveEmptyEntries);
 					DebugConditional.Log("... manifest loaded successfully.");
-					callback?.Invoke(lines.ToArray());
+					callback?.Invoke(lines);
 				}
 			}
 		}
