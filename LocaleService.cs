@@ -273,7 +273,7 @@ namespace Common.Locale
 				else
 				{
 					DebugConditional.Log("... locales are loaded successfully.");
-					ParseLocales(www.downloadHandler.text);
+					ParseLocales(Encoding.UTF8.GetString(www.downloadHandler.data));
 				}
 
 				_numLoadedLocales.SetValueAndForceNotify(_numLoadedLocales.Value - 1);
