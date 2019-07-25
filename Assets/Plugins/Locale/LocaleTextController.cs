@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
+// ReSharper disable once CheckNamespace
 namespace Common.Locale
 {
 	[DisallowMultipleComponent]
@@ -17,7 +18,7 @@ namespace Common.Locale
 		private LocalString _localString;
 
 #pragma warning disable 649
-		[Inject] private readonly LocaleService _localeService;
+		[Inject] private readonly LocaleServiceBase _localeService;
 #pragma warning restore 649
 
 		private void Start()

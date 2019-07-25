@@ -5,11 +5,12 @@ using Common.Locale;
 using UniRx;
 using UnityEngine;
 
+// ReSharper disable once CheckNamespace
 namespace Common
 {
 	public class LocalString : IDisposable
 	{
-		private readonly LocaleService _localeService;
+		private readonly LocaleServiceBase _localeService;
 		private readonly StringReactiveProperty _value = new StringReactiveProperty(string.Empty);
 		private string _key;
 		private object[] _formatArgs;
@@ -30,7 +31,7 @@ namespace Common
 
 		// \IDisposable
 
-		public LocalString(LocaleService localeService, string key, object[] formatArgs = null)
+		public LocalString(LocaleServiceBase localeService, string key, object[] formatArgs = null)
 		{
 			_localeService = localeService;
 			_key = key;
