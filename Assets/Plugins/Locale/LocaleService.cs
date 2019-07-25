@@ -75,6 +75,12 @@ namespace Common.Locale
 		[Inject] private readonly DiContainer _container;
 #pragma warning restore 649
 
+		[Inject]
+		private void Construct(SystemLanguage defaultLanguage)
+		{
+			RestorePersistingState(defaultLanguage);
+		}
+
 		// IGameService
 
 		void IGameService.Initialize()
@@ -96,7 +102,6 @@ namespace Common.Locale
 
 					if (_numLoadedLocales.Value <= 0)
 					{
-						RestorePersistingState();
 						Debug.Log("... locales are not found.");
 
 						_ready.SetValueAndForceNotify(true);
@@ -110,7 +115,6 @@ namespace Common.Locale
 						// ReSharper disable once AccessToModifiedClosure
 						d?.Dispose();
 
-						RestorePersistingState();
 						Debug.Log("... locales are loaded.");
 
 						_ready.SetValueAndForceNotify(true);
