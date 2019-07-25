@@ -14,6 +14,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using Zenject;
 
+// ReSharper disable once CheckNamespace
 namespace Common.Locale
 {
 	public static class LocaleConst
@@ -25,7 +26,7 @@ namespace Common.Locale
 		public static readonly string LocalesManifestFileName = "manifest";
 	}
 
-	public class LocaleService : IGameService
+	public abstract class LocaleServiceBase : IGameService
 	{
 		private class LocaleEntry
 		{
@@ -57,8 +58,6 @@ namespace Common.Locale
 			}
 		}
 
-		private const string LocaleKey = "tamafish_locale";
-
 		private readonly Dictionary<SystemLanguage, LocaleEntry> _localesMap =
 			new Dictionary<SystemLanguage, LocaleEntry>();
 
@@ -69,14 +68,17 @@ namespace Common.Locale
 
 		private static readonly Regex TransRegex = new Regex(@"(?:\\n|\\r\\n)");
 
-		private BoolReactiveProperty _ready = new BoolReactiveProperty(false);
+		private readonly BoolReactiveProperty _ready = new BoolReactiveProperty(false);
+
+		protected abstract string LocalePersistKey { get; }
 
 #pragma warning disable 649
 		[Inject] private readonly DiContainer _container;
 #pragma warning restore 649
 
 		[Inject]
-		private void Construct(SystemLanguage defaultLanguage)
+		// ReSharper disable once UnusedMember.Local
+		private void Construct([InjectOptional] SystemLanguage defaultLanguage)
 		{
 			RestorePersistingState(defaultLanguage);
 		}
@@ -209,22 +211,22 @@ namespace Common.Locale
 
 		private void PersistCurrentState()
 		{
-			PlayerPrefs.SetString(LocaleKey, typeof(SystemLanguage).GetEnumName(CurrentLanguage.Value));
+			PlayerPrefs.SetString(LocalePersistKey, typeof(SystemLanguage).GetEnumName(CurrentLanguage.Value));
 			PlayerPrefs.Save();
 		}
 
-		private void RestorePersistingState()
+		private void RestorePersistingState(SystemLanguage defaultLanguage)
 		{
-			SystemLanguage lang;
-			try
+			var persist = false;
+			var lang = defaultLanguage;
+			if (PlayerPrefs.HasKey(LocalePersistKey))
 			{
-				lang = PlayerPrefs.HasKey(LocaleKey)
-					? (SystemLanguage) Enum.Parse(typeof(SystemLanguage), PlayerPrefs.GetString(LocaleKey))
-					: Application.systemLanguage;
-			}
-			catch (ArgumentException)
-			{
-				lang = Application.systemLanguage;
+				var i = PlayerPrefs.GetInt(LocalePersistKey);
+				persist = !Enum.IsDefined(typeof(SystemLanguage), i);
+				if (!persist)
+				{
+					lang = (SystemLanguage) i;
+				}
 			}
 
 			switch (lang)
@@ -237,6 +239,8 @@ namespace Common.Locale
 					_currentLanguage.SetValueAndForceNotify(SystemLanguage.English);
 					break;
 			}
+
+			if (persist) PersistCurrentState();
 		}
 
 		private static IEnumerator LoadManifest(string path, Action<string[]> callback)
@@ -253,7 +257,7 @@ namespace Common.Locale
 				}
 				else
 				{
-					var lines = Encoding.UTF8.GetString(www.downloadHandler.data).Split(new string[] {"\r\n", "\n"},
+					var lines = Encoding.UTF8.GetString(www.downloadHandler.data).Split(new[] {"\r\n", "\n"},
 						StringSplitOptions.RemoveEmptyEntries);
 					DebugConditional.Log("... manifest loaded successfully.");
 					callback?.Invoke(lines);
