@@ -26,7 +26,7 @@ namespace Common.Locale
 		public static readonly string LocalesManifestFileName = "manifest";
 	}
 
-	public abstract class LocaleServiceBase : IGameService
+	public abstract class LocaleServiceBase : ILocaleService
 	{
 		private class LocaleEntry
 		{
@@ -83,7 +83,7 @@ namespace Common.Locale
 			RestorePersistingState(defaultLanguage);
 		}
 
-		// IGameService
+		// ILocaleService
 
 		void IGameService.Initialize()
 		{
@@ -126,17 +126,8 @@ namespace Common.Locale
 
 		public IReadOnlyReactiveProperty<bool> Ready => _ready;
 
-		// \IGameService
-
-		/// <summary>
-		/// Ключ текущей локализации.
-		/// </summary>
 		public IReadOnlyReactiveProperty<SystemLanguage> CurrentLanguage => _currentLanguage;
 
-		/// <summary>
-		/// Задать текущий язык локализации.
-		/// </summary>
-		/// <param name="lang">Новый текущий язык локализации.</param>
 		public void SetCurrentLanguage(SystemLanguage lang)
 		{
 			if (lang == CurrentLanguage.Value) return;
@@ -144,22 +135,11 @@ namespace Common.Locale
 			PersistCurrentState();
 		}
 
-		/// <summary>
-		/// Получить локализованную строку по ее ключу.
-		/// </summary>
-		/// <param name="key">Ключ.</param>
-		/// <returns>Локализованное значение, или ключ, если значение для текущей локализации отсутствует.</returns>
 		public string GetLocalized(string key)
 		{
 			return GetLocalized(key, CurrentLanguage.Value);
 		}
 
-		/// <summary>
-		/// Получить локализованную строку по ее ключу.
-		/// </summary>
-		/// <param name="key">Ключ.</param>
-		/// <param name="language">Локализация, для которой запрашивается значение.</param>
-		/// <returns></returns>
 		public string GetLocalized(string key, SystemLanguage language)
 		{
 			try
@@ -174,12 +154,6 @@ namespace Common.Locale
 			}
 		}
 
-		/// <summary>
-		/// Локализовать указанный UI.
-		/// </summary>
-		/// <param name="ui">Корневой объект локализуемого UI.</param>
-		/// <param name="applyController">Флаг, указывающий применить ко всем найденным текстовым
-		/// элементам контроллер с целью отслеживания смены локализации пользователем.</param>
 		public void Localize(GameObject ui, bool applyController = false)
 		{
 			var text = ui.GetComponentsInChildren<Text>(true);
@@ -208,6 +182,8 @@ namespace Common.Locale
 				}
 			}
 		}
+
+		// \ILocaleService
 
 		private void PersistCurrentState()
 		{
