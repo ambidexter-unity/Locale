@@ -211,7 +211,7 @@ namespace Common.Locale
 
 		private void PersistCurrentState()
 		{
-			PlayerPrefs.SetString(LocalePersistKey, typeof(SystemLanguage).GetEnumName(CurrentLanguage.Value));
+			PlayerPrefs.SetInt(LocalePersistKey, (int) CurrentLanguage.Value);
 			PlayerPrefs.Save();
 		}
 
