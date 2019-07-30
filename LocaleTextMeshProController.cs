@@ -18,7 +18,7 @@ namespace Common.Locale
 		private LocalString _localString;
 		
 #pragma warning disable 649
-		[Inject] private readonly LocaleServiceBase _localeService;
+		[Inject] private readonly ILocaleService _localeService;
 #pragma warning restore 649
 
 		private void Start()
