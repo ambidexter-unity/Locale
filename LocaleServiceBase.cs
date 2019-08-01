@@ -253,14 +253,13 @@ namespace Common.Locale
 				if (www.isNetworkError || www.isHttpError)
 				{
 					Debug.LogErrorFormat("Failed to load locales from {0} with error: {1}", path, www.error);
+					_numLoadedLocales.SetValueAndForceNotify(_numLoadedLocales.Value - 1);
 				}
 				else
 				{
 					DebugConditional.Log("... locales are loaded successfully.");
 					ParseLocales(Encoding.UTF8.GetString(www.downloadHandler.data));
 				}
-
-				_numLoadedLocales.SetValueAndForceNotify(_numLoadedLocales.Value - 1);
 			}
 		}
 
@@ -307,21 +306,22 @@ namespace Common.Locale
 						}
 					}
 				}
-
-				_numLoadedLocales.SetValueAndForceNotify(_numLoadedLocales.Value - 1);
 			}
 
 			if (locales == null)
 			{
 				Debug.LogWarning("Locale map is empty.");
-				return;
+			}
+			else
+			{
+				for (var i = 1; i < locales.Length; i++)
+				{
+					var loc = locales[i];
+					_localesMap[loc.Key] = loc;
+				}
 			}
 
-			for (var i = 1; i < locales.Length; i++)
-			{
-				var loc = locales[i];
-				_localesMap[loc.Key] = loc;
-			}
+			_numLoadedLocales.SetValueAndForceNotify(_numLoadedLocales.Value - 1);
 		}
 
 		private string[] SeparateLine(string line)
