@@ -88,9 +88,9 @@ namespace Common.Locale
 		void IGameService.Initialize()
 		{
 			Debug.Log("Initialize Locale service...");
-
-			var manifestPath = Path.Combine(Application.streamingAssetsPath, LocaleConst.LocalesPath,
-				LocaleConst.LocalesManifestFileName);
+			
+			var manifestPath = GetPath(LocaleConst.LocalesManifestFileName);
+			
 			MainThreadDispatcher.StartCoroutine(
 				LoadManifest(manifestPath, locales =>
 				{
@@ -98,7 +98,8 @@ namespace Common.Locale
 
 					foreach (var locale in locales)
 					{
-						var path = Path.Combine(Application.streamingAssetsPath, LocaleConst.LocalesPath, locale);
+						var path = GetPath(locale);
+						
 						MainThreadDispatcher.StartCoroutine(LoadLocale(path));
 					}
 
@@ -398,6 +399,17 @@ namespace Common.Locale
 			b2s();
 
 			return res.ToArray();
+		}
+		
+		private string GetPath(string fileName)
+		{
+			var fullPath = Path.Combine(Application.streamingAssetsPath, LocaleConst.LocalesPath, fileName);
+			
+			#if UNITY_IOS
+				fullPath = $"file://{fullPath}";
+			#endif
+
+			return fullPath;
 		}
 
 		private static string ProcessRawString(string raw)
