@@ -1,0 +1,18 @@
+key,ru_ru,en_us
+tutor.selector1,Привет ребята. Наши друзья собрались в путешествие на воздушном шаре. Давайте поможем им к нему подготовиться.,Hi guys. Our friends are going on a balloon trip. Let's help them get ready for it.
+tutor.selector2,"Нажимай кнопку “Играть”, чтобы отправиться в приключение. ",Press the “Play” button to go on an adventure.
+tutor.enter.stepashka.house1,"Выбери домик Степашки и посмотри, что нам надо найти там. ",Choose Stepashka's house and see what we need to find there.
+tutor.enter.stepashka.house2,"Нажимай на кнопку “Играть”, чтобы зайти в гости к Степашке и помочь ему в поисках. ",Click on the “Play” button to visit Stepashka and help him in his search.
+tutor.hog1,"Посмотри на эту панельку. Там показаны все предметы, которые нам надо найти. ",Look at this panel. It shows all the items that we need to find.
+tutor.hog2,Давай разберём беспорядок. Начнём с уборки игрушек. Найди машинку и нажми на неё.,Let's disassemble the mess. Let's start with cleaning toys. Find the car and click on it.
+tutor.hog3,"Да, не так просто найти нужные вещи в таком беспорядке. Давай воспользуемся подсказкой. ","Yes, it is not so easy to find the right things in such a mess. Let's use the hint."
+tutor.hog4,"Отлично, так мы быстро могли бы всё найти, но подсказки ограничены. Используй их только когда совсем трудно. Теперь найди самостоятельно оставшиеся предметы.","Great, so we could quickly find everything, but the clues are limited. Use them only when it is very difficult. Now find the remaining items yourself."
+tutor.next,Нажми на экран для продолжения.,Click on the screen to continue.
+tutor.inventory1,"Когда мы находим нужный предмет, то он помещается на полку. Давай посмотрим, что мы нашли.","When we find the desired item, it is placed on the shelf. Let's see what we found."
+tutor.inventory2,"А вот и наша карта. Теперь помоги нашим друзьям собрать другие предметы, чтобы построить воздушный шар.",And here is our map. Now help our friends collect other items to build a balloon.
+tutor.collections1,"Кое-что нам придется сделать своими руками. Собери все предметы из коллекции, чтобы сделать обшивку для воздушного шара","We have to do something with our own hands. Collect all the items from the collection to make the trim for the balloon"
+tutor.collections2,"Нажми кнопку заданий, чтобы увидеть все задания, которые нужно выполнить нашим друзьям.","Click the tasks button to see all the tasks our friends need to complete."
+tutor.collections3,"Все предметы собраны. Давай завершим наше первое задание.",All items collected. Let's complete our first assignment.
+tutor.collections4,"Нажми кнопку “сбор”, чтобы собрать найденные предметы вместе.",Click the “collect” button to collect the items found.
+tutor.collections5,"Замечательно! Мы только что сделали новый предмет. Продолжай играть, и выполнять задания, чтобы наши друзья смогли отправиться в путешествие.",Wonderful! We just made a new item. Keep playing and doing tasks so that our friends can go on a trip.
+tutor.minigame1,"Если тебе нужны подсказки, то мы можем получить их, если сыграем в миниигру.","If you need tips, then we can get them if we play a mini-game."

@@ -1,0 +1,21 @@
+key,ru_ru,en_us
+sound.toggle,Звуки,Sounds
+music.toggle,Музыка,Music
+language.title,Язык интерфейса,Interface language
+lang.rus,Рус.,Rus.
+lang.eng,Англ.,Eng.
+hog_lock_{0}:{1},"Будь внимателен! Когда ты часто выбираешь ненужные вещи, они портятся. Вещи будут восстановлены через [{0}:{1}]",Timer [{0}:{1}]
+new_collection.title,Новая Коллекция!,New Collection!
+new_collection.description1,Найди все предметы из списка:,Find all items from the list:
+new_collection.description2,и собери,and assemble
+collections.title,Коллекции,Collections
+wallet.title,Вещи,Things
+confirm_text.exit,"Вы уверены, что хотите выйти?",Are you sure about exit?
+minigame.win,Победа!,You won!
+minigame.lose,Поражение,You lose
+minigame.lose_description,Время вышло,Time is gone
+notification_text.cap,,
+notification_text.pairs_no_tries,Вы исчерпали все попытки,Sorry but you have no tries
+new.thing,Новинка!,New!
+tips_are_over.message,"Все подсказки закончились. Играй в миниигры, чтобы получить новые.",All the tips are over. Play mini-games to get new ones.
+reset_progress.message,"Вы действительно хотите сбросить прогресс?","Are you sure about reset your saves?"

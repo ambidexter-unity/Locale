@@ -1,16 +1,22 @@
-using Common.Service;
-using UniRx;
+using Common.GameService;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 namespace Common.Locale
 {
+	public delegate void CurrentLanguageChangedHandler(SystemLanguage language);
+
 	public interface ILocaleService : IGameService
 	{
 		/// <summary>
 		/// Ключ текущей локализации.
 		/// </summary>
-		IReadOnlyReactiveProperty<SystemLanguage> CurrentLanguage { get; }
+		SystemLanguage CurrentLanguage { get; }
+
+		/// <summary>
+		/// Событие смены текущего языка локализации.
+		/// </summary>
+		event CurrentLanguageChangedHandler CurrentLanguageChangedEvent;
 
 		/// <summary>
 		/// Задать текущий язык локализации.

@@ -1,31 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using Common.Service;
-using Extensions;
+using System.Threading;
+using Common.GameService;
 using TMPro;
-using UniRx;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using Zenject;
 
 // ReSharper disable once CheckNamespace
 namespace Common.Locale
 {
-	public static class LocaleConst
-	{
-		// Путь к локалям в StreamingAssets.
-		public static readonly string LocalesPath = "Locales";
-
-		// Имя файла манифеста для локалей.
-		public static readonly string LocalesManifestFileName = "manifest";
-	}
-
 	public abstract class LocaleServiceBase : ILocaleService
 	{
 		private class LocaleEntry
@@ -37,7 +25,7 @@ namespace Common.Locale
 				Key = key;
 			}
 
-			public SystemLanguage Key { get; private set; }
+			public SystemLanguage Key { get; }
 
 			public void SetValue(string key, string value)
 			{
@@ -58,87 +46,94 @@ namespace Common.Locale
 			}
 		}
 
+
+		private SystemLanguage _currentLanguage = Application.systemLanguage;
+		private bool _isReady;
+		private bool _isInitialized;
+		private int _numLoadedLocales;
+
 		private readonly Dictionary<SystemLanguage, LocaleEntry> _localesMap =
 			new Dictionary<SystemLanguage, LocaleEntry>();
 
-		private readonly IntReactiveProperty _numLoadedLocales = new IntReactiveProperty(0);
-
-		private readonly ReactiveProperty<SystemLanguage> _currentLanguage =
-			new ReactiveProperty<SystemLanguage>(Application.systemLanguage);
+		private readonly Mutex _readyMutex = new Mutex();
 
 		private static readonly Regex TransRegex = new Regex(@"(?:\\n|\\r\\n)");
 
-		private readonly BoolReactiveProperty _ready = new BoolReactiveProperty(false);
-
 		protected abstract string LocalePersistKey { get; }
-
-#pragma warning disable 649
-		[Inject] private readonly DiContainer _container;
-#pragma warning restore 649
-
-		[Inject]
-		// ReSharper disable once UnusedMember.Local
-		private void Construct([InjectOptional] SystemLanguage defaultLanguage)
-		{
-			RestorePersistingState(defaultLanguage);
-		}
+		protected abstract string LocalesManifestFileName { get; }
+		protected abstract string LocalesPath { get; }
 
 		// ILocaleService
 
-		void IGameService.Initialize()
+		public SystemLanguage CurrentLanguage
 		{
-			Debug.Log("Initialize Locale service...");
-			
-			var manifestPath = GetPath(LocaleConst.LocalesManifestFileName);
-			
-			MainThreadDispatcher.StartCoroutine(
-				LoadManifest(manifestPath, locales =>
-				{
-					Assert.IsFalse(_numLoadedLocales.Value > 0);
+			get => _currentLanguage;
+			private set
+			{
+				if (value == _currentLanguage) return;
+				_currentLanguage = value;
+				CurrentLanguageChangedEvent?.Invoke(_currentLanguage);
+			}
+		}
 
+		public event CurrentLanguageChangedHandler CurrentLanguageChangedEvent;
+
+		public virtual void Initialize(params object[] args)
+		{
+			if (IsReady || _isInitialized)
+			{
+				Debug.LogError("Locale service already initialized.");
+				return;
+			}
+
+			_isInitialized = true;
+
+			var manifestPath = GetPath(LocalesManifestFileName);
+			LoadManifest(manifestPath, locales =>
+			{
+				Assert.IsFalse(_numLoadedLocales > 0);
+				_numLoadedLocales = locales.Length;
+				if (_numLoadedLocales > 0)
+				{
 					foreach (var locale in locales)
 					{
 						var path = GetPath(locale);
-						
-						MainThreadDispatcher.StartCoroutine(LoadLocale(path));
+						LoadLocale(path);
 					}
-
-					if (_numLoadedLocales.Value <= 0)
-					{
-						Debug.Log("... locales are not found.");
-
-						_ready.SetValueAndForceNotify(true);
-						return;
-					}
-
-					IDisposable d = null;
-					d = _numLoadedLocales.Select(i => i <= 0).Subscribe(value =>
-					{
-						if (!value) return;
-						// ReSharper disable once AccessToModifiedClosure
-						d?.Dispose();
-
-						Debug.Log("... locales are loaded.");
-
-						_ready.SetValueAndForceNotify(true);
-					});
-				}));
+				}
+				else
+				{
+					Debug.Log("... locales are not found.");
+					IsReady = true;
+				}
+			});
 		}
 
-		public IReadOnlyReactiveProperty<bool> Ready => _ready;
+		public bool IsReady
+		{
+			get => _isReady;
+			private set
+			{
+				if (value == _isReady) return;
 
-		public IReadOnlyReactiveProperty<SystemLanguage> CurrentLanguage => _currentLanguage;
+				Assert.IsFalse(_isReady);
+				_isReady = value;
+				ReadyEvent?.Invoke(this);
+			}
+		}
+
+		public event GameServiceReadyHandler ReadyEvent;
 
 		public void SetCurrentLanguage(SystemLanguage lang)
 		{
-			if (lang == CurrentLanguage.Value) return;
-			_currentLanguage.SetValueAndForceNotify(lang);
+			if (lang == CurrentLanguage) return;
+			CurrentLanguage = lang;
 			PersistCurrentState();
 		}
 
 		public string GetLocalized(string key)
 		{
-			return GetLocalized(key, CurrentLanguage.Value);
+			return GetLocalized(key, CurrentLanguage);
 		}
 
 		public string GetLocalized(string key, SystemLanguage language)
@@ -162,7 +157,16 @@ namespace Common.Locale
 			{
 				if (applyController)
 				{
-					_container.InstantiateComponent<LocaleTextController>(t.gameObject);
+					ILocaleController controller = t.GetComponent<LocaleTextController>();
+					if (controller == null)
+					{
+						controller = t.gameObject.AddComponent<LocaleTextController>();
+						controller.LocaleService = this;
+					}
+					else
+					{
+						Debug.LogError("Trying to localize twice.");
+					}
 				}
 				else
 				{
@@ -175,7 +179,16 @@ namespace Common.Locale
 			{
 				if (applyController)
 				{
-					_container.InstantiateComponent<LocaleTextMeshProController>(tmp.gameObject);
+					ILocaleController controller = tmp.GetComponent<LocaleTextMeshProController>();
+					if (controller == null)
+					{
+						controller = tmp.gameObject.AddComponent<LocaleTextMeshProController>();
+						controller.LocaleService = this;
+					}
+					else
+					{
+						Debug.LogError("Trying to localize twice.");
+					}
 				}
 				else
 				{
@@ -188,11 +201,11 @@ namespace Common.Locale
 
 		private void PersistCurrentState()
 		{
-			PlayerPrefs.SetInt(LocalePersistKey, (int) CurrentLanguage.Value);
+			PlayerPrefs.SetInt(LocalePersistKey, (int) CurrentLanguage);
 			PlayerPrefs.Save();
 		}
 
-		private void RestorePersistingState(SystemLanguage defaultLanguage)
+		protected void RestorePersistingState(SystemLanguage defaultLanguage)
 		{
 			var persist = false;
 			var lang = defaultLanguage;
@@ -206,26 +219,20 @@ namespace Common.Locale
 				}
 			}
 
-			switch (lang)
-			{
-				case SystemLanguage.Russian:
-					// TODO: Add supported languages here.
-					_currentLanguage.SetValueAndForceNotify(lang);
-					break;
-				default:
-					_currentLanguage.SetValueAndForceNotify(SystemLanguage.English);
-					break;
-			}
-
+			CurrentLanguage = IsLanguageSupported(lang) ? lang : Application.systemLanguage;
 			if (persist) PersistCurrentState();
 		}
 
-		private static IEnumerator LoadManifest(string path, Action<string[]> callback)
+		protected abstract bool IsLanguageSupported(SystemLanguage lang);
+
+		private static void LoadManifest(string path, Action<string[]> callback)
 		{
-			DebugConditional.LogFormat("-- load LocaleService manifest from {0}...", path);
-			using (var www = UnityWebRequest.Get(path))
+			var www = UnityWebRequest.Get(path);
+
+			// ReSharper disable AccessToDisposedClosure
+			void OnCompleted(AsyncOperation obj)
 			{
-				yield return www.SendWebRequest();
+				obj.completed -= OnCompleted;
 
 				if (www.isNetworkError || www.isHttpError)
 				{
@@ -236,41 +243,52 @@ namespace Common.Locale
 				{
 					var lines = Encoding.UTF8.GetString(www.downloadHandler.data).Split(new[] {"\r\n", "\n"},
 						StringSplitOptions.RemoveEmptyEntries);
-					DebugConditional.Log("... manifest loaded successfully.");
 					callback?.Invoke(lines);
 				}
+
+				www.Dispose();
 			}
+			// ReSharper restore AccessToDisposedClosure
+
+			var op = www.SendWebRequest();
+			if (op.isDone) OnCompleted(op);
+			else op.completed += OnCompleted;
 		}
 
-		private IEnumerator LoadLocale(string path)
+		private void LoadLocale(string path)
 		{
-			DebugConditional.LogFormat("-- load locales from {0}...", path);
-			_numLoadedLocales.SetValueAndForceNotify(_numLoadedLocales.Value + 1);
+			var www = UnityWebRequest.Get(path);
 
-			using (var www = UnityWebRequest.Get(path))
+			void OnCompleted(AsyncOperation obj)
 			{
-				yield return www.SendWebRequest();
+				var isReady = false;
+				if (_readyMutex.WaitOne())
+				{
+					if (www.isNetworkError || www.isHttpError)
+					{
+						Debug.LogErrorFormat("Failed to load locales from {0} with error: {1}", path, www.error);
+					}
+					else
+					{
+						ParseLocales(Encoding.UTF8.GetString(www.downloadHandler.data));
+					}
 
-				if (www.isNetworkError || www.isHttpError)
-				{
-					Debug.LogErrorFormat("Failed to load locales from {0} with error: {1}", path, www.error);
-					_numLoadedLocales.SetValueAndForceNotify(_numLoadedLocales.Value - 1);
+					--_numLoadedLocales;
+					isReady = _numLoadedLocales <= 0;
+					_readyMutex.ReleaseMutex();
 				}
-				else
-				{
-					DebugConditional.Log("... locales are loaded successfully.");
-					ParseLocales(Encoding.UTF8.GetString(www.downloadHandler.data));
-				}
+
+				if (isReady) IsReady = true;
 			}
+
+			var op = www.SendWebRequest();
+			if (op.isDone) OnCompleted(op);
+			else op.completed += OnCompleted;
 		}
 
 		private void ParseLocales(string raw)
 		{
-			if (string.IsNullOrEmpty(raw))
-			{
-				_numLoadedLocales.SetValueAndForceNotify(_numLoadedLocales.Value - 1);
-				return;
-			}
+			if (string.IsNullOrEmpty(raw)) return;
 
 			LocaleEntry[] locales = null;
 			var lines = raw.Split(new[] {"\n", "\r\n"}, StringSplitOptions.RemoveEmptyEntries);
@@ -292,7 +310,7 @@ namespace Common.Locale
 
 						for (var j = 1; j < columns.Length; j++)
 						{
-							var key = columns[j].AsLanguage();
+							var key = KeyToLanguage(columns[j]);
 							locales[j] = _localesMap.ContainsKey(key) ? _localesMap[key] : new LocaleEntry(key);
 						}
 					}
@@ -321,9 +339,9 @@ namespace Common.Locale
 					_localesMap[loc.Key] = loc;
 				}
 			}
-
-			_numLoadedLocales.SetValueAndForceNotify(_numLoadedLocales.Value - 1);
 		}
+
+		protected abstract SystemLanguage KeyToLanguage(string key);
 
 		private string[] SeparateLine(string line)
 		{
@@ -400,15 +418,13 @@ namespace Common.Locale
 
 			return res.ToArray();
 		}
-		
+
 		private string GetPath(string fileName)
 		{
-			var fullPath = Path.Combine(Application.streamingAssetsPath, LocaleConst.LocalesPath, fileName);
-			
-			#if UNITY_IOS
-				fullPath = $"file://{fullPath}";
-			#endif
-
+			var fullPath = Path.Combine(Application.streamingAssetsPath, LocalesPath, fileName);
+#if UNITY_IOS
+			fullPath = $"file://{fullPath}";
+#endif
 			return fullPath;
 		}
 

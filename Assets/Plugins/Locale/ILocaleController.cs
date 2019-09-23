@@ -1,3 +1,5 @@
+// ReSharper disable once CheckNamespace
+
 namespace Common.Locale
 {
 	/// <summary>
@@ -6,10 +8,15 @@ namespace Common.Locale
 	public interface ILocaleController
 	{
 		/// <summary>
+		/// Текущий сервис локализации.
+		/// </summary>
+		ILocaleService LocaleService { set; }
+
+		/// <summary>
 		/// Предполагаемый ключ локализации (соответствует начальному значению текстового поля).
 		/// </summary>
 		string Key { get; set; }
-		
+
 		/// <summary>
 		/// Применить форматирование к локализованной строке.
 		/// </summary>

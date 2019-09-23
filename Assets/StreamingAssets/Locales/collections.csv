@@ -1,0 +1,27 @@
+key,ru_ru,en_us
+balloon_trim.title,Обшивка воздушного шара,Balloon's trim
+balloon_basket.title,Корзина для воздушного шара,Balloon's basket
+toolbox.title,Набор инструментов,Toolbox
+construction_site.title,Строительная площадка,Construction site
+bags_with_sand.title,Мешки с песком,Sand bags
+toy_car.title,Игрушечная машинка,Toy car
+sphere.title,Шар,Glob
+balloon.title,Воздушный шар,Balloon
+balloon_trim.description,"Найди бумагу, полотно и клей, чтобы сделать обшивку воздушного шара.","Find paper, canvas and glue to make the balloon trim."
+balloon_basket.description,"Найди прутики и веревку, чтобы сделать корзину для воздушного шара.",Find twigs and rope to make a balloon basket.
+toolbox.description,"Собери набор инструментов, необходимых для постройки воздушного шара.",Build a set of tools needed to build a balloon.
+construction_site.description,"Для постройки нам необходимы шар, корзина и инструменты.","For the construction we need a ball, basket and tools."
+bags_with_sand.description,Возьми мешки и насыпь в них песок с помощью совка и ведерка.,Take the bags and fill them with sand with a scoop and a bucket.
+toy_car.description,"Если все детали найдены, мы сможем собрать машинку.","If all parts are found, we can assemble the machine."
+sphere.description,Шар - главная деталь нашего летательного аппарата.,The ball is the main part of our aircraft.
+balloon.description,"Для сборки воздушного шара нам понадобятся шар, веревки и мешки с песком.","To build a balloon, we need a balloon, ropes and sandbags."
+tourist_set.title,Набор туриста,
+tourist_set.description,Набор туриста,
+lifesaver_set.title,Набор спасателя,
+lifesaver_set.description,Набор спасателя,
+raft_ground.title,Плот на земле,
+raft_ground.description,Плот на земле,
+raft_water.title,Плот на воде,
+raft_water.description,Плот на воде,
+expedition.title,Экспедиция,
+expedition.description,Экспедиция,

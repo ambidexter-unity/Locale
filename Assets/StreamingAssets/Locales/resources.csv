@@ -1,0 +1,117 @@
+key,ru_ru,en_us
+map.name,Карта,Map
+map.description,Необходима в каждом путешествии.,Needed on every trip.
+paper.name,Бумага,Paper
+balloon_drawing.name,Чертеж воздушного шара,Balloon drawing
+balloon_drawing.description,По этому чертежу можно построить настоящий воздушный шар!,On this drawing you can build a real balloon!
+paper.description,Пригодится для обшивки шара.,For sheathing of the balloon.
+canvas.name,Полотно,Canvas
+canvas.description,Пригодится для обшивки шара.,For sheathing of the balloon.
+glue.name,Клей,Glue
+glue.description,"Используй, чтобы наклеить полотно на ткань.",Use to stick the canvas on the paper.
+sheathing.name,Обшивка,Sheathing
+sheathing.description,Из этого материала мы сделаем шар.,From this material we will make a balloon.
+phone.name,Телефон,Phone
+phone.description,Теперь можно позвонить друзьям.,Now you can call your friends.
+phonebook.name,Зарядка для телефона.,Phone charger.
+phonebook.description,Без электричества ни один телефон не заработает.,"Without electricity, no phone will not work."
+teapot.name,Чайник,Teapot
+teapot.description,Без него не обходится ни одно чаепитие.,No tea party can do without it.
+cups.name,Чашки,Cups
+cups.description,Самая удобная посуда для вкусного чая.,The most convenient dishes for delicious tea.
+tablecloth.name,Скатерть,Tablecloth
+tablecloth.description,"Придаст столу красоты, а дому уюта.","It will give the table beauty, and home coziness."
+twigs.name,Прутики,Twigs
+twigs.description,Из этих простых прутиков можно сделать много полезных вещей!,Many useful things can be made from these simple twigs!
+rope.name,Веревка,Rope
+rope.description,Пригодится чтобы что-нибудь привязать.,It is useful to tie something.
+basket.name,Корзина,Basket
+basket.description,В большой корзине можно даже летать!,You can even fly in a large basket!
+nippers.name,Кусачки,Nippers
+nippers.description,"Помогут, если нужно отрезать кусок проволоки.",Help if you need to cut a piece of wire.
+hammer.name,Молоток,Hammer
+hammer.description,Без него даже гвоздь не забьешь.,"Without it, even a nail can not be forgotten."
+scissors.name,Ножницы,Scissors
+scissors.description,"Необходимы, чтобы сделать выкройку.",Needed to make a pattern.
+toolbox.name,Ящик с инструментами,Toolbox
+toolbox.description,Ничего нельзя сделать без подходящих инструментов.,Nothing can be done without the right tools.
+primus.name,Примус,Primus
+primus.description,Заменит газовую плиту в походе.,Serves as a gas stove in the campaign.
+bags.name,Мешки,Bags
+bags.description,В них можно хранить что-нибудь сыпучее.,They can store something loose.
+needle_with_thread.name,Иголка с ниткой,Needle and thread
+needle_with_thread.description,"Поможет пришить пуговицу, или сшить воздушный шар.","It will help to sew a button, or make a balloon."
+wheels.name,Колеса от машинки,Car wheels
+wheels.description,Детали от Хрюшиного грузовичка.,Details from Khryusha's truck.
+lighter.name,Зажигалка,Lighter
+lighter.description,Поможет зажечь свечу или газовую плиту.,It will help to light a candle or a gas stove.
+battery.name,Батарейки,Batteries
+battery.description,Источник питания для Хрюшиного грузовичка.,The power source for the Khryusha's truck.
+brush.name,Щетка,Brush
+brush.description,"Незаменима, если нужно что-нибудь почистить.",Indispensable if you need to clean something.
+bucket.name,Ведёрко,Bucket
+bucket.description,В нем можно носить воду или песок.,It can carry water or sand.
+scoop.name,Совок,Scoop
+scoop.description,"Первая вещь, когда играешь в песочнице.",First thing when playing in the sandbox.
+toy_dump_truck_body.name,Корпус машинки,Toy car's body
+toy_dump_truck_body.description,"Всё, что осталось от самосвала после игры в автомеханика.",All that remains of the dump truck after playing an auto mechanic.
+toy_dump_truck_cabin.name,Кабина машинки,Toy car's cabin
+toy_dump_truck_cabin.description,Деталь от Хрюшиного грузовичка.,Detail from Khryusha's truck.
+bags_with_sand.name,Мешки с песком,Sand bags
+bags_with_sand.description,Помогут регулировать высоту полета воздушного шара.,Will help regulate the height of the flight of the balloon.
+canister.name,Канистра,Canister
+canister.description,В ней хранится керосин для примуса.,It stores kerosene for a primus stove.
+rope_ladder.name,Веревочная лестница,Rope-ladder
+rope_ladder.description,"Совсем как обычная лестница, но занимает меньше места.","Just like a regular staircase, but takes up less space."
+building_yard.name,Строительная площадка,Construction site
+building_yard.description,"Место, где будет строиться наш воздушный шар.",The place where our balloon will be built.
+toy_dump_truck.name,Игрушечная машинка,Toy car
+toy_dump_truck.description,"Маленький, но мощный грузовичок на батарейках.","Small, but powerful battery-powered truck."
+sphere.name,Шар,Glob
+sphere.description,Главная деталь воздушного шара.,The main part of the balloon.
+balloon.name,Воздушный шар,Balloon
+balloon.description,"Летательный аппарат, который могут собрать даже дети.",An aircraft that even children can assemble.
+beeding.name,Бусы,
+beeding.description,Красивые бусики,
+cauldron.name,Котелок,
+cauldron.description,В этом котелке получается вкусная уха,
+comb.name,Гребешок,
+comb.description,Нужно быть всегда красивым,
+compass.name,Компас,
+compass.description,Поможет не заблудиться,
+flashlight.name,Фонарик,
+flashlight.description,"Всегда поможет увидеть, что находится в темноте",
+hat.name,Шляпка,
+hat.description,Красивая шляпка,
+lifebuoy.name,Спасательный круг,
+lifebuoy.description,Позволяет не утонуть,
+log.name,Бревна,
+log.description,Основа для плота,
+logs.name,Поленья,
+logs.description,По ним мы спустим плот на воду,
+medkit.name,Аптечка,
+medkit.description,Обычная походная аптечка,
+mirror.name,Зеркальце,
+mirror.description,"Как еще узнать, что мы неотразимы?",
+notebook.name,Записная книжка,
+notebook.description,"Нужна, чтоб делать записи",
+paddle1.name,Весло,
+paddle1.description,"Нужно, чтоб управлять плотом на воде",
+paddle2.name,Весло,
+paddle2.description,"Нужно, чтоб столкнуть плот в воду",
+pencil.name,Карандаш,
+pencil.description,Чем-то нужно писать в записной книжке,
+rope2.name,Веревка,
+rope2.description,Этим мы свяжем бревна для плота,
+tent.name,Палатка,
+tent.description,Обычная походная палатка,
+lifesaver_set.name,Набор спасателя,
+lifesaver_set.description,Набор спасателя,
+raft_ground.name,Плот на берегу,
+raft_ground.description,Плот на берегу,
+raft_water.name,Плот на воде,
+raft_water.description,Плот на воде,
+tourist_set.name,Набор туриста,
+tourist_set.description,Набор туриста,
+expedition.name,Экспедиция,
+expedition.description,"Вперед, за Хрюшей!",

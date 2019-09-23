@@ -1,21 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UniRx;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 namespace Common.Locale
 {
+	public delegate void LocalStringTextChangedHandler(LocalString localString, string oldText);
+
 	public class LocalString : IDisposable
 	{
 		private readonly ILocaleService _localeService;
-		private readonly StringReactiveProperty _value = new StringReactiveProperty(string.Empty);
+		private string _value = string.Empty;
 		private string _key;
 		private object[] _formatArgs;
 
 		private bool _isDisposed;
-		private IDisposable _languageHandler;
 
 		// IDisposable
 
@@ -23,9 +23,8 @@ namespace Common.Locale
 		{
 			if (_isDisposed) return;
 			_isDisposed = true;
-			
-			_languageHandler.Dispose();
-			_languageHandler = null;
+
+			_localeService.CurrentLanguageChangedEvent -= OnUpdateValue;
 		}
 
 		// \IDisposable
@@ -35,7 +34,7 @@ namespace Common.Locale
 			_localeService = localeService;
 			_key = key;
 			_formatArgs = formatArgs;
-			_languageHandler = localeService.CurrentLanguage.Subscribe(OnUpdateValue);
+			localeService.CurrentLanguageChangedEvent += OnUpdateValue;
 		}
 
 		private void OnUpdateValue(SystemLanguage language)
@@ -44,13 +43,28 @@ namespace Common.Locale
 
 			var localString = _localeService.GetLocalized(_key, language);
 			if (_formatArgs != null) localString = string.Format(localString, _formatArgs);
-			if (_value.Value != localString) _value.SetValueAndForceNotify(localString);
+			Value = localString;
 		}
 
 		/// <summary>
 		/// Итоговое локализованное форматированное значение строки.
 		/// </summary>
-		public IReadOnlyReactiveProperty<string> Value => _value;
+		public string Value
+		{
+			get => _value;
+			private set
+			{
+				if (value == _value) return;
+				var oldValue = _value;
+				_value = value;
+				TextChangedEvent?.Invoke(this, oldValue);
+			}
+		}
+
+		/// <summary>
+		/// Событие изменения локализованного текста.
+		/// </summary>
+		public event LocalStringTextChangedHandler TextChangedEvent;
 
 		/// <summary>
 		/// Ключ локализации.
@@ -61,7 +75,7 @@ namespace Common.Locale
 			{
 				if (value == _key) return;
 				_key = value;
-				OnUpdateValue(_localeService.CurrentLanguage.Value);
+				OnUpdateValue(_localeService.CurrentLanguage);
 			}
 			get => _key;
 		}
@@ -74,7 +88,7 @@ namespace Common.Locale
 			set
 			{
 				_formatArgs = value?.ToArray();
-				OnUpdateValue(_localeService.CurrentLanguage.Value);
+				OnUpdateValue(_localeService.CurrentLanguage);
 			}
 			get => _formatArgs.ToArray();
 		}
