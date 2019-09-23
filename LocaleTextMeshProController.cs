@@ -1,8 +1,6 @@
 using System.Linq;
 using TMPro;
-using UniRx;
 using UnityEngine;
-using Zenject;
 
 // ReSharper disable once CheckNamespace
 namespace Common.Locale
@@ -11,31 +9,37 @@ namespace Common.Locale
 	[RequireComponent(typeof(TextMeshProUGUI))]
 	public class LocaleTextMeshProController : MonoBehaviour, ILocaleController
 	{
-		private readonly CompositeDisposable _handlers = new CompositeDisposable();
-
 		private string _key;
 		private object[] _formatArgs;
 		private LocalString _localString;
-		
-#pragma warning disable 649
-		[Inject] private readonly ILocaleService _localeService;
-#pragma warning restore 649
+		private ILocaleService _localeService;
+		private TextMeshProUGUI _text;
 
 		private void Start()
 		{
-			var text = GetComponent<TextMeshProUGUI>();
-			_key = _key ?? text.text.Trim();
+			_text = GetComponent<TextMeshProUGUI>();
+			_key = _key ?? _text.text.Trim();
 			_localString = new LocalString(_localeService, _key, _formatArgs);
-			_handlers.Add(_localString);
-			_handlers.Add(_localString.Value.Subscribe(s => text.text = s));
+			_localString.TextChangedEvent += OnLocalTextChanged;
+		}
+
+		private void OnLocalTextChanged(LocalString localString, string oldText)
+		{
+			_text.text = localString.Value;
 		}
 
 		private void OnDestroy()
 		{
-			_handlers.Dispose();
+			_localString.TextChangedEvent -= OnLocalTextChanged;
+			_localString.Dispose();
 		}
 
 		// ILocaleController
+
+		ILocaleService ILocaleController.LocaleService
+		{
+			set => _localeService = value;
+		}
 
 		public string Key
 		{
@@ -53,7 +57,7 @@ namespace Common.Locale
 			if (_localString == null) return null;
 
 			_localString.FormatArgs = _formatArgs;
-			return _localString.Value.Value;
+			return _localString.Value;
 		}
 
 		// \ILocaleController
