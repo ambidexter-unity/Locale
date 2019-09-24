@@ -46,5 +46,12 @@ namespace Common.Locale
 		/// <param name="applyController">Флаг, указывающий применить ко всем найденным текстовым
 		/// элементам контроллер с целью отслеживания смены локализации пользователем.</param>
 		void Localize(GameObject ui, bool applyController = false);
+
+		/// <summary>
+		/// Добавить к локализациям новый CSV файл. 
+		/// </summary>
+		/// <param name="rawData">Текстовое содержимое CSV файла в формате UTF-8.</param>
+		/// <returns>Возвращает <code>true</code>, если содержимое файла успешно добавлено в локализатор.</returns>
+		bool AddLocaleCsv(string rawData);
 	}
 }
