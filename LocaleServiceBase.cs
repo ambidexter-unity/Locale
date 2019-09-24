@@ -138,6 +138,12 @@ namespace Common.Locale
 
 		public string GetLocalized(string key, SystemLanguage language)
 		{
+			if (!IsReady)
+			{
+				Debug.LogError("Trying to get locale before initialization is completed.");
+				return key;
+			}
+
 			try
 			{
 				var currentLocale = _localesMap[language];
@@ -194,6 +200,19 @@ namespace Common.Locale
 				{
 					tmp.text = GetLocalized(tmp.text.Trim());
 				}
+			}
+		}
+
+		public bool AddLocaleCsv(string rawData)
+		{
+			try
+			{
+				ParseLocales(rawData);
+				return true;
+			}
+			catch
+			{
+				return false;
 			}
 		}
 
