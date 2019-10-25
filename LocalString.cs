@@ -35,6 +35,7 @@ namespace Common.Locale
 			_key = key;
 			_formatArgs = formatArgs;
 			localeService.CurrentLanguageChangedEvent += OnUpdateValue;
+			OnUpdateValue(localeService.CurrentLanguage);
 		}
 
 		private void OnUpdateValue(SystemLanguage language)
