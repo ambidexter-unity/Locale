@@ -441,7 +441,7 @@ namespace Common.Locale
 		private string GetPath(string fileName)
 		{
 			var fullPath = Path.Combine(Application.streamingAssetsPath, LocalesPath, fileName);
-#if UNITY_IOS
+#if UNITY_IOS || UNITY_EDITOR_OSX
 			fullPath = $"file://{fullPath}";
 #endif
 			return fullPath;
